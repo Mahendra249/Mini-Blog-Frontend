@@ -13,20 +13,33 @@ import {
   Coffee,
 } from "lucide-react";
 import "../styles/PostDetails.css";
-import useSWR from "swr";
-import { fetchData } from "../api/ClientFunction";
+import useSWR, { mutate } from "swr";
+import { deleteData, fetchData } from "../api/ClientFunction";
 import { useParams } from "react-router-dom";
+import { Edit, Trash } from "lucide-react";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import UpdatePostModal from "../components/CreatePostForm/UpdatePostModel";
+import { useAuth } from "../context/AuthContext";
 
 export default function PostDetail() {
   const [isLiked, setIsLiked] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
   const [estimatedReadTime, setEstimatedReadTime] = useState(0);
   const { id } = useParams();
+  const { user } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   console.log("Post ID from URL:", id);
 
   const { data, isLoading } = useSWR(`/posts/getsinglepost/${id}`, fetchData);
 
+  const showEditButton =
+    user?.role === "superadmin" ||
+    user?.role === "admin" ||
+    user?._id === data?.post?.author?._id
+      ? true
+      : false;
 
   const error = null;
 
@@ -52,13 +65,43 @@ export default function PostDetail() {
     }
   }, [data]);
 
+  const handleDelete = async (postId) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this post?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      toast.promise(
+        deleteData(`/posts/${postId}`).then((response) => {
+          if (response?.success) {
+            mutate("/posts");
+            return response.message || "Post deleted successfully";
+          } else {
+            throw new Error(response?.message || "Failed to delete post");
+          }
+        }),
+        {
+          pending: "Deleting post...",
+          success: (msg) => msg,
+          error: (err) => err.message || "Something went wrong",
+        }
+      );
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p className="text-gray-600 mt-4 text-lg">
-            Loading amazing content...
+            Loading amazing content for you...
           </p>
         </div>
       </div>
@@ -246,6 +289,25 @@ export default function PostDetail() {
                 </div>
               </div>
             </div>
+            <hr className="my-8 border-gray-200 w-1/2 mx-auto" />
+            {showEditButton && (
+              <div className="flex flex-wrap gap-4 justify-center mb-8">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-yellow-500 text-white hover:bg-yellow-600 transition"
+                >
+                  <Edit className="w-5 h-5" />
+                  Edit Post
+                </button>
+                <button
+                  onClick={() => handleDelete(post?._id)}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
+                >
+                  <Trash className="w-5 h-5" />
+                  Delete Post
+                </button>
+              </div>
+            )}
 
             {/* Footer Actions */}
             <div className="bg-gray-50 rounded-2xl p-8 text-center">
@@ -287,6 +349,11 @@ export default function PostDetail() {
             </div>
           </div>
         </div>
+        <UpdatePostModal
+          visible={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialData={post}
+        />
       </div>
     </>
   );

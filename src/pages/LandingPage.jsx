@@ -121,13 +121,13 @@ const LandingPage = () => {
       ) : (
         <>
           <HeroSection />
-          <StatsSection />
           <SearchFilterSection
             categories={categories}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
           />
           <PostsSection posts={filteredPosts} />
+          <StatsSection />
           <NewsletterSection />
         </>
       )}

@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const HeroSection=()=> {
-    const navigate = useNavigate()
+const HeroSection = () => {
+  const navigate = useNavigate();
   return (
     <section className="relative py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto text-center">
@@ -15,13 +15,13 @@ const HeroSection=()=> {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <button
-            className="bg-blue-600 text-white px-8 py-4 rounded-xl hover:bg-blue-700 text-lg shadow-lg"
+            className="bg-blue-600 text-white px-8 py-2 rounded-xl hover:bg-blue-700 text-lg shadow-lg"
             onClick={() => navigate("/register")}
           >
             Join Now
           </button>
           <button
-            className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl hover:bg-blue-600 hover:text-white text-lg"
+            className="border-2 border-blue-600 text-blue-600 px-8 py-2 rounded-xl hover:bg-blue-600 hover:text-white text-lg"
             onClick={() => navigate("/login")}
           >
             Explore More
@@ -30,5 +30,5 @@ const HeroSection=()=> {
       </div>
     </section>
   );
-}
+};
 export default HeroSection;

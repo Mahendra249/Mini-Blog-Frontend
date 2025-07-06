@@ -1,0 +1,12 @@
+.editbtn{
+    display: flex;
+    gap: 20px;
+}
+.editbtn button{
+    font-size: 18px;
+    color: gray;
+    cursor: pointer;
+}
+.editbtn button:hover{
+    color: rgb(0, 0, 0);
+}

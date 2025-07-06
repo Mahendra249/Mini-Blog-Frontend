@@ -1,5 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Calendar, User, ArrowRight, Tag } from "lucide-react";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import "./PostCard.css";
+import { deleteData } from "../../api/ClientFunction";
+import { toast } from "react-toastify";
+import { mutate } from "swr";
+import Swal from "sweetalert2";
+import { useState } from "react";
+import UpdatePostModal from "../CreatePostForm/UpdatePostModel";
 
 const PostMeta = ({ icon: Icon, text }) => (
   <div className="flex items-center gap-1 text-gray-500 text-sm">
@@ -7,6 +16,7 @@ const PostMeta = ({ icon: Icon, text }) => (
     <span>{text}</span>
   </div>
 );
+
 
 const categoryImages = [
   {
@@ -58,16 +68,49 @@ const categoryImages = [
 
 const PostCard = ({ post }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const showEditBtn = location.pathname === "/dashboard";
 
-  // Find category image robustly
-  const categoryData = categoryImages.find((item) =>
-    post.category?.trim().toLowerCase().includes(item.category.toLowerCase())
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const categoryData = categoryImages.find(
+    (item) =>
+      post.category &&
+      post.category.trim().toLowerCase().includes(item.category.toLowerCase())
   );
-
-  // Fallback image if no match
   const imageUrl =
     categoryData?.image ||
     "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=800&h=400&fit=crop";
+
+  const handleDelete = async (postId) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this post?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      toast.promise(
+        deleteData(`/posts/${postId}`).then((response) => {
+          if (response?.success) {
+            mutate("/posts");
+            return response.message || "Post deleted successfully";
+          } else {
+            throw new Error(response?.message || "Failed to delete post");
+          }
+        }),
+        {
+          pending: "Deleting post...",
+          success: (msg) => msg,
+          error: (err) => err.message || "Something went wrong",
+        }
+      );
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow">
@@ -78,13 +121,23 @@ const PostCard = ({ post }) => {
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
         />
       </div>
-      <div className="p-6">
-        <div className="flex flex-wrap gap-4 mb-4 text-sm">
+      <div className="p-6 flex flex-col justify-between ">
+        <div className="flex justify-between flex-wrap gap-4 mb-4 text-sm">
           <PostMeta icon={User} text={post.author?.name} />
           <PostMeta
             icon={Calendar}
             text={new Date(post.date).toLocaleDateString()}
           />
+          {showEditBtn && (
+            <div className="editbtn flex gap-3 text-lg">
+              <button onClick={() => setIsModalOpen(true)}>
+                <FaRegEdit />
+              </button>
+              <button onClick={() => handleDelete(post._id)}>
+                <MdDelete />
+              </button>
+            </div>
+          )}
         </div>
         <h3
           onClick={() => navigate(`/post/${post._id}`)}
@@ -105,6 +158,12 @@ const PostCard = ({ post }) => {
             Read More <ArrowRight className="w-4 h-4" />
           </button>
         </div>
+
+        <UpdatePostModal
+          visible={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialData={post}
+        />
       </div>
     </div>
   );

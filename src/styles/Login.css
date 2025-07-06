@@ -1,6 +1,6 @@
 .login-page {
   font-family: "Arial", sans-serif;
-  background: linear-gradient(135deg, #ffffff 0%, #333a68 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -14,9 +14,9 @@
   right: 0;
   bottom: 0;
 }
-.backbtn{
+.backbtn {
   position: absolute;
-  top: 1rem ;
+  top: 1rem;
   left: 1rem;
   background-color: rgb(174, 174, 255);
   padding: 7px;
@@ -25,7 +25,7 @@
   cursor: pointer;
   z-index: 10;
 }
-.backbtn:hover{
+.backbtn:hover {
   background-color: rgb(90, 90, 248);
 }
 .particles {
@@ -156,7 +156,6 @@
 }
 
 .form-group:focus-within {
- 
 }
 
 .form-group input {
@@ -165,7 +164,7 @@
   border: none;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: navy;
   font-size: 16px;
   outline: none;
   transition: all 0.3s ease;
@@ -187,11 +186,16 @@
   cursor: not-allowed;
 }
 
+.error-text {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
 .login-btn {
   width: 100%;
   padding: 8px;
-    border: none;
-    border-radius: 7px;
+  border: none;
+  border-radius: 7px;
   background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
   color: white;
   font-size: 18px;

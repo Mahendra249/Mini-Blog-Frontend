@@ -48,7 +48,7 @@ const Header = () => {
               <button
                 key={index}
                 onClick={() => handleRouteClick(link.route)}
-                className="text-gray-700 hover:text-blue-600 transition"
+                className="text-gray-700 hover:text-blue-600 transition cursor-pointer"
               >
                 {link.label}
               </button>

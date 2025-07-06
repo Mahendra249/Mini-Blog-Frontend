@@ -1,36 +1,50 @@
-import { useState } from "react";
 import "../styles/Register.css";
 import { postData } from "../api/ClientFunction";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LucideArrowLeft } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useState } from "react";
 
 export default function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [msg, setMsg] = useState("");
-  const [msgType, setMsgType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
-    setIsLoading(true);
-    const payload = {
-      name,
-      email,
-      password,
-    };
+  // Yup validation schema
+  const RegisterSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(2, "Name should be at least 2 characters")
+      .required("Full name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Please confirm your password"),
+  });
 
-    console.log("Register payload:", payload);
+  const handleRegister = async (values) => {
+    setIsLoading(true);
+    console.log("Register payload:", values);
+
+    const payload = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+    };
 
     const response = await postData("/auth/register", payload);
     if (response?.success) {
-      console.log("done done dana done");
+      setUser(response?.user);
       localStorage.setItem("token", response?.token);
-      toast.success(response?.msg || "user registered successfuly");
+      localStorage.setItem("user", JSON.stringify(response.user));
+      toast.success(response?.msg || "User registered successfully");
       navigate("/");
     } else {
       toast.error(response?.msg || "Registration failed");
@@ -40,10 +54,10 @@ export default function Register() {
 
   return (
     <div className="register-page">
-      {/* Animated Background Elements */}
       <div className="backbtn" onClick={() => navigate("/")}>
         <LucideArrowLeft />
       </div>
+
       <div className="background-shapes">
         {[...Array(6)].map((_, i) => (
           <div key={i} className={`shape shape-${i + 1}`}></div>
@@ -65,96 +79,109 @@ export default function Register() {
           <p>Join us and start your journey</p>
         </div>
 
-        <div className="form-section">
-          <div className="form-group">
-            <div className="input-wrapper">
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                disabled={isLoading}
-                className="form-input"
-              />
-              <div className="input-focus-line"></div>
-            </div>
-          </div>
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          validationSchema={RegisterSchema}
+          onSubmit={handleRegister}
+        >
+          {({ isSubmitting }) => (
+            <Form className="form-section">
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <Field
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    className="form-input"
+                    disabled={isLoading}
+                  />
+                  <div className="input-focus-line"></div>
+                </div>
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className="error-text"
+                />
+              </div>
 
-          <div className="form-group">
-            <div className="input-wrapper">
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={isLoading}
-                className="form-input"
-              />
-              <div className="input-focus-line"></div>
-            </div>
-          </div>
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    className="form-input"
+                    disabled={isLoading}
+                  />
+                  <div className="input-focus-line"></div>
+                </div>
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="error-text"
+                />
+              </div>
 
-          <div className="form-group">
-            <div className="input-wrapper">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isLoading}
-                className="form-input"
-              />
-              <div className="input-focus-line"></div>
-            </div>
-          </div>
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    className="form-input"
+                    disabled={isLoading}
+                  />
+                  <div className="input-focus-line"></div>
+                </div>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="error-text"
+                />
+              </div>
 
-          <div className="form-group">
-            <div className="input-wrapper">
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                disabled={isLoading}
-                className="form-input"
-              />
-              <div className="input-focus-line"></div>
-            </div>
-          </div>
+              <div className="form-group">
+                <div className="input-wrapper">
+                  <Field
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    className="form-input"
+                    disabled={isLoading}
+                  />
+                  <div className="input-focus-line"></div>
+                </div>
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  className="error-text"
+                />
+              </div>
 
-          <button
-            type="submit"
-            className="register-btn"
-            disabled={isLoading}
-            onClick={handleRegister}
-          >
-            <span className={`btn-content ${isLoading ? "loading" : ""}`}>
-              <span className="btn-text">Create Account</span>
-              <div className="btn-loader"></div>
-            </span>
-            <div className="btn-ripple"></div>
-          </button>
-        </div>
+              <button
+                type="submit"
+                className="register-btn"
+                disabled={isLoading || isSubmitting}
+              >
+                <span className={`btn-content ${isLoading ? "loading" : ""}`}>
+                  <span className="btn-text">Create Account</span>
+                  <div className="btn-loader"></div>
+                </span>
+                <div className="btn-ripple"></div>
+              </button>
+            </Form>
+          )}
+        </Formik>
 
         <div className="login-redirect">
           <p>Already have an account?</p>
-          <a  onClick={() => navigate("/login")}>
-            Sign In
-          </a>
+          <a onClick={() => navigate("/login")}>Sign In</a>
         </div>
-
-        {msg && (
-          <div className={`message ${msgType}`}>
-            <div className="message-icon">
-              {msgType === "success" ? "✓" : "⚠"}
-            </div>
-            <span>{msg}</span>
-          </div>
-        )}
       </div>
     </div>
   );

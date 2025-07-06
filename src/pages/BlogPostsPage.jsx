@@ -10,7 +10,6 @@ import Spinner from "../components/Loader/Spinner";
 
 const BlogPostsPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { data, isLoading, error } = useSWR("/posts", fetchData);
 
   if (isLoading)
@@ -56,7 +55,7 @@ const BlogPostsPage = () => {
             <p className="text-center text-gray-500">No posts found.</p>
           )}
 
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-12 text-center text-white">
+          <div className="bg-gradient-to-r from-blue-400 via-blue-300 to-blue-500 rounded-2xl p-12 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
             <p className="text-lg mb-8 opacity-90">
               Get the latest blog posts delivered straight to your inbox.
@@ -65,7 +64,7 @@ const BlogPostsPage = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-xl text-gray-900 focus:ring-2 focus:ring-white outline-none"
+                className="flex-1 px-4 py-3 rounded-xl text-white-900 focus:ring-2 focus:ring-white outline-none"
               />
               <button className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100">
                 Subscribe
