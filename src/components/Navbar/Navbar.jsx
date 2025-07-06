@@ -31,7 +31,7 @@ const Navbar = () => {
         className="navbar-brand"
         onClick={() => handleNavigate("/dashboard")}
       >
-        MS BLOG
+        BLOGHUB
       </div>
 
       <div className={`navbar-links ${menuOpen ? "open" : ""}`}>

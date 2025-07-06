@@ -10,12 +10,14 @@ import BlogPostsPage from "./pages/BlogPostsPage";
 import NewPost from "./pages/NewPost";
 import { AuthProvider } from "./context/AuthContext";
 import MyProfile from "./pages/MyProfile";
+import LandingPage from "./pages/LandingPage";
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

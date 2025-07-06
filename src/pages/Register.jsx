@@ -3,6 +3,7 @@ import "../styles/Register.css";
 import { postData } from "../api/ClientFunction";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { LucideArrowLeft } from "lucide-react";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -30,7 +31,7 @@ export default function Register() {
       console.log("done done dana done");
       localStorage.setItem("token", response?.token);
       toast.success(response?.msg || "user registered successfuly");
-      navigate("/dashboard");
+      navigate("/");
     } else {
       toast.error(response?.msg || "Registration failed");
     }
@@ -40,6 +41,9 @@ export default function Register() {
   return (
     <div className="register-page">
       {/* Animated Background Elements */}
+      <div className="backbtn" onClick={() => navigate("/")}>
+        <LucideArrowLeft />
+      </div>
       <div className="background-shapes">
         {[...Array(6)].map((_, i) => (
           <div key={i} className={`shape shape-${i + 1}`}></div>
@@ -55,7 +59,7 @@ export default function Register() {
       <div className="register-container">
         <div className="logo-section">
           <div className="logo-circle">
-            <span className="logo-text">MS BLOG</span>
+            <span className="logo-text">BLOG HUB</span>
           </div>
           <h1>Create Account</h1>
           <p>Join us and start your journey</p>

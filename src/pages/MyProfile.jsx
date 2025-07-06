@@ -16,8 +16,10 @@ import {
   Upload,
   Eye,
   EyeOff,
+  LucideArrowLeft,
 } from "lucide-react";
 import "../styles/Profile.css";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -41,14 +43,15 @@ const ProfilePage = () => {
     followingCount: 567,
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    // Simulate loading user data
     const loadUserData = () => {
-      // In real app, fetch from API
       console.log("Loading user profile...");
     };
     loadUserData();
   }, []);
+  
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -91,6 +94,9 @@ const ProfilePage = () => {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 relative">
+        <div className="backbtn" onClick={() => navigate("/")}>
+          <LucideArrowLeft />
+        </div>
         <div className="floating-elements"></div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

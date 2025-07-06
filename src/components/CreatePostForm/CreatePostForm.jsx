@@ -1,51 +1,49 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { postData } from "../api/ClientFunction";
-import Navbar from "../components/Navbar/Navbar";
-import Header from "../components/Landingpage/Header";
+import React, { useState } from "react";
 
-const NewPost = () => {
+const CreatePostForm = ({ onCreate, onCancel }) => {
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
     content: "",
     category: "",
+    status: "draft",
   });
+
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const response = await postData("/posts", formData);
-    if (response?.success) {
-      toast.success(response.message || "Post created successfully");
-      navigate("/posts"); // adjust route
-    } else {
-      toast.error(response?.message || "Failed to create post");
+    try {
+      if (onCreate) {
+        await onCreate(formData);
+      }
+      setFormData({
+        title: "",
+        excerpt: "",
+        content: "",
+        category: "",
+        status: "draft",
+      });
+    } catch (error) {
+      console.error("Failed to create post:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gray-50 flex items-start justify-center px-4 py-8">
-        <div className="max-w-2xl w-full bg-white p-8 rounded-xl shadow-xl">
-          <h2 className="text-3xl font-bold mb-8 text-center">
-            Create New Post
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+    <div className="min-h-screen bg-gray-50 flex items-start justify-center px-2 py-2">
+      <div className="max-w-4xl w-full bg-white p-4 rounded-xl shadow-xl">
+        <h2 className="text-3xl font-bold mb-8 text-center">Create New Post</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0">
+            <div className="flex-1">
               <label className="block mb-1 font-semibold">Title</label>
               <input
                 type="text"
@@ -57,34 +55,35 @@ const NewPost = () => {
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
               />
             </div>
-
-            <div>
+            <div className="flex-1">
               <label className="block mb-1 font-semibold">Tagline</label>
-              <textarea
+              <input
+                type="text"
                 name="excerpt"
                 value={formData.excerpt}
                 onChange={handleChange}
                 required
                 disabled={isLoading}
-                rows={1}
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-              ></textarea>
+              />
             </div>
+          </div>
 
-            <div>
-              <label className="block mb-1 font-semibold">Content</label>
-              <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleChange}
-                required
-                disabled={isLoading}
-                rows={6}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-              ></textarea>
-            </div>
+          <div>
+            <label className="block mb-1 font-semibold">Content</label>
+            <textarea
+              name="content"
+              value={formData.content}
+              onChange={handleChange}
+              required
+              disabled={isLoading}
+              rows={4}
+              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+            ></textarea>
+          </div>
 
-            <div>
+          <div className="flex flex-col md:flex-row md:space-x-6 space-y-2 md:space-y-0">
+            <div className="flex-1">
               <label className="block mb-1 font-semibold">Category</label>
               <select
                 name="category"
@@ -106,19 +105,29 @@ const NewPost = () => {
                 <option value="Govt">Govt.</option>
               </select>
             </div>
+            
+          </div>
 
+          <div className="flex space-x-4">
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition disabled:opacity-50"
+              className="flex-1 bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition disabled:opacity-50"
             >
               {isLoading ? "Creating..." : "Create Post"}
             </button>
-          </form>
-        </div>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 bg-gray-400 text-white py-3 rounded-md hover:bg-gray-500 transition"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 
-export default NewPost;
+export default CreatePostForm;

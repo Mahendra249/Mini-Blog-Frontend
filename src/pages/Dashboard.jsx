@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import "../styles/Dashboard.css";
 import Navbar from "../components/Navbar/Navbar";
+import CreatePostForm from "../components/CreatePostForm/CreatePostForm";
+import Header from "../components/Landingpage/Header";
 
 const Dashboard = () => {
   const [posts, setPosts] = useState([
@@ -140,34 +142,11 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       {/* Header */}
-      <Navbar/>
+      <Header />
 
       <div className="main-content">
         {/* Controls */}
-        <div className="controls">
-          <div className="filters">
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="filter-select"
-            >
-              <option value="all">All Posts</option>
-              <option value="published">Published</option>
-              <option value="draft">Drafts</option>
-              <option value="my-posts">My Posts</option>
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="sort-select"
-            >
-              <option value="date">Sort by Date</option>
-              <option value="title">Sort by Title</option>
-              <option value="views">Sort by Views</option>
-            </select>
-          </div>
-
+        {/* <div className="controls">
           {canCreate() && (
             <button
               onClick={() => setShowCreateForm(true)}
@@ -177,62 +156,15 @@ const Dashboard = () => {
               Create Post
             </button>
           )}
-        </div>
+        </div> */}
 
         {/* Create Post Form */}
-        {showCreateForm && (
-          <div className="create-form">
-            <h3 className="form-title">Create New Post</h3>
-
-            <div className="form-group">
-              <input
-                type="text"
-                placeholder="Post Title"
-                value={newPost.title}
-                onChange={(e) =>
-                  setNewPost({ ...newPost, title: e.target.value })
-                }
-                className="form-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <textarea
-                placeholder="Post Content"
-                value={newPost.content}
-                onChange={(e) =>
-                  setNewPost({ ...newPost, content: e.target.value })
-                }
-                rows={6}
-                className="form-textarea"
-              />
-            </div>
-
-            <div className="form-actions">
-              <select
-                value={newPost.status}
-                onChange={(e) =>
-                  setNewPost({ ...newPost, status: e.target.value })
-                }
-                className="status-select"
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
-
-              <button onClick={handleCreatePost} className="btn btn-success">
-                Create Post
-              </button>
-
-              <button
-                onClick={() => setShowCreateForm(false)}
-                className="btn btn-secondary"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+        {/* {showCreateForm && (
+          <CreatePostForm
+            onCreate={handleCreatePost}
+            onCancel={() => setShowCreateForm(false)}
+          />
+        )} */}
 
         {/* Posts Grid */}
         <div className="posts-grid">

@@ -5,7 +5,7 @@ import useSWR from "swr";
 import { fetchData } from "../api/ClientFunction";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar/Navbar";
-
+import Header from "../components/Landingpage/Header";
 
 const BlogPostsPage = () => {
   const navigate = useNavigate();
@@ -19,12 +19,10 @@ const BlogPostsPage = () => {
     );
 
   const posts = data?.posts || [];
-  console.log(posts)
+  console.log(posts);
 
-  
   return (
     <>
-      <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
