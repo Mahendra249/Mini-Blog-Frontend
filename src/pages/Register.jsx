@@ -142,7 +142,7 @@ export default function Register() {
 
         <div className="login-redirect">
           <p>Already have an account?</p>
-          <a href="#" onClick={() => navigate("/login")}>
+          <a  onClick={() => navigate("/login")}>
             Sign In
           </a>
         </div>

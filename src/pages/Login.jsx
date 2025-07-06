@@ -81,7 +81,7 @@ export default function Login() {
         </form>
 
         <div className="forgot-password">
-          <a href="#" onClick={() => navigate("/register")}>
+          <a  onClick={() => navigate("/register")}>
             Don't have an account? Register
           </a>
         </div>

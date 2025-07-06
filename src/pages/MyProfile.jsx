@@ -51,7 +51,7 @@ const ProfilePage = () => {
     };
     loadUserData();
   }, []);
-  
+
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -294,7 +294,7 @@ const ProfilePage = () => {
                         />
                       ) : (
                         <a
-                          href={profileData.website}
+                          // href={profileData.website}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-indigo-600 hover:text-indigo-800 bg-gray-50 px-4 py-2 rounded-lg block transition-colors"

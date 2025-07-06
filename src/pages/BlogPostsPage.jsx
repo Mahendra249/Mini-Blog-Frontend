@@ -6,13 +6,19 @@ import { fetchData } from "../api/ClientFunction";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar/Navbar";
 import Header from "../components/Landingpage/Header";
+import Spinner from "../components/Loader/Spinner";
 
 const BlogPostsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data, isLoading, error } = useSWR("/posts", fetchData);
 
-  if (isLoading) return <p className="text-center py-10">Loading posts...</p>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner />
+      </div>
+    );
   if (error)
     return (
       <p className="text-center py-10 text-red-500">Failed to load posts.</p>
@@ -26,7 +32,9 @@ const BlogPostsPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Blog</h1>
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+              Welcome to <span className="text-blue-600">BlogHub</span>
+            </h1>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Discover insights, tutorials, and the latest trends in web
               development, design, and technology.
