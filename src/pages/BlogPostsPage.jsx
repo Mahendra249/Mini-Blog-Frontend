@@ -20,7 +20,10 @@ const BlogPostsPage = () => {
     );
   if (error)
     return (
-      <p className="text-center py-10 text-red-500">Failed to load posts.</p>
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner />
+        Backend Server Error
+      </div>
     );
 
   const posts = data?.posts || [];

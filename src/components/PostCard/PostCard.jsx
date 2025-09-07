@@ -17,7 +17,6 @@ const PostMeta = ({ icon: Icon, text }) => (
   </div>
 );
 
-
 const categoryImages = [
   {
     category: "React",
@@ -47,7 +46,7 @@ const categoryImages = [
   {
     category: "Health",
     image:
-      "https://www.theunconventionaldietitian.com/wp-content/uploads/health-word-cloud-123rf.jpg",
+      "https://plus.unsplash.com/premium_photo-1672760403439-bf51a26c1ae6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGhlYWx0aGNhcmV8ZW58MHx8MHx8fDA%3D",
   },
   {
     category: "Business",
