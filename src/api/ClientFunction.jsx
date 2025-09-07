@@ -1,6 +1,6 @@
 import axios from "axios";
 export const baseURL =
-  "https://mini-blog-backend-production-8deb.up.railway.app/api" ||
+  "https://mini-blog-backend-7tdm.onrender.com/api" ||
   "http://localhost:5000/api";
 
 if (!baseURL) {
